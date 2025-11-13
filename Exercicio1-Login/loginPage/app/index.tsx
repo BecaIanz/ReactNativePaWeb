@@ -1,7 +1,30 @@
-import { Platform, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
-import {useState} from 'react';
+import { Platform, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import {useState, useEffect} from 'react';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { app } from '../firebaseConfig'
 
 export default function HomeScreen() {
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+
+  const auth = getAuth(app)
+
+  const signUp = () =>{
+    if(password === confirmPassword)
+    {
+      createUserWithEmailAndPassword(auth,email,password )
+      console.log("foi")
+    }
+    else{
+      return alert("erro!")
+    }
+  }
+
+  useEffect(() => {
+    console.log(email, password, confirmPassword)
+  },[email,password,confirmPassword])
 
   return (
     <View style={styles.container }>
@@ -10,11 +33,11 @@ export default function HomeScreen() {
       </View>
       <View style={styles.body}>
 
-        <TextInput placeholder='Email' style={styles.input}></TextInput>
-        <TextInput secureTextEntry={true} placeholder='Senha' style={styles.input}></TextInput>
-        <TextInput secureTextEntry={true} placeholder='Confirmar Senha' style={styles.input}></TextInput>
+        <TextInput placeholder='Email' style={styles.input} onChangeText={(value) => setEmail(value)}></TextInput>
+        <TextInput secureTextEntry={true} placeholder='Senha' style={styles.input} onChangeText={(value) => setPassword(value)}></TextInput>
+        <TextInput secureTextEntry={true} placeholder='Confirmar Senha' style={styles.input} onChangeText={(value) => setConfirmPassword(value)}></TextInput>
  
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={signUp}>
           <Text style={styles.textbutton}>Cadastrar</Text>
         </TouchableOpacity>
 
