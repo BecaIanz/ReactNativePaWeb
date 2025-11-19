@@ -2,6 +2,8 @@ import { Platform, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, A
 import {useState, useEffect} from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { app } from '../firebaseConfig'
+import { Link, router } from 'expo-router';
+import Swal from 'sweetalert2'
 
 export default function HomeScreen() {
 
@@ -9,16 +11,45 @@ export default function HomeScreen() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
 
+  const minPassaword = 6
   const auth = getAuth(app)
+  
+  const signUp = async () =>{
+    if(password.length >= minPassaword){
+      if(password == confirmPassword){
+        try{
+          await createUserWithEmailAndPassword(auth, email, password)
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: "Cadastrado com sucesso!"
+          })
 
-  const signUp = () =>{
-    if(password === confirmPassword)
-    {
-      createUserWithEmailAndPassword(auth,email,password )
-      console.log("foi")
+          return router.navigate('/login')
+        }
+        catch(e){
+          return Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "email ja existe " + e
+          })
+        }
+      }
+      else{
+        return Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "As senhas não coincidem"
+        })
+      }
+      
     }
     else{
-      return alert("erro!")
+      return Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "A senha deve conter no minimo " + minPassaword + " caracteres"
+      })
     }
   }
 
@@ -40,6 +71,7 @@ export default function HomeScreen() {
         <TouchableOpacity style={styles.button} onPress={signUp}>
           <Text style={styles.textbutton}>Cadastrar</Text>
         </TouchableOpacity>
+        <Link style={styles.textbutton2} href={'/login'}>Ir para Login</Link>
 
       </View>
       <View style={styles.final}>
