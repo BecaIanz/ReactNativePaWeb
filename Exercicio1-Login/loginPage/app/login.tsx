@@ -16,6 +16,11 @@ const singIn = async () => {
     try{
         await signInWithEmailAndPassword(auth, email, password)
         router.navigate('/home')
+        return Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Login Realizado"
+        })
     }
     catch(e){
         return Swal.fire({
