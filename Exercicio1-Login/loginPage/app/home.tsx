@@ -6,7 +6,7 @@ import { app } from '../firebaseConfig'
 import { Link, router } from 'expo-router';
 import { setUserId } from 'firebase/analytics';
 import {db } from "../firebaseConfig"
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, getDoc, query, serverTimestamp } from 'firebase/firestore';
 
 
 export default function HomeScreen() {
@@ -24,10 +24,6 @@ async function register() {
         const auth = getAuth()
         const user = auth.currentUser
 
-        if(!user){
-            console.log("usuario nao encontrado")
-            return
-        }
         if(!title || !genre || !director || !country){
             console.log("tem que cadastrar algo")
             return
@@ -41,7 +37,6 @@ async function register() {
             filmOrSerie,
             numOfEps,
             duration,
-            userid: user.uid,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         }
@@ -58,6 +53,8 @@ async function register() {
 
     }
 }
+
+
 
 return (
     <View style={styles.container }>
@@ -82,6 +79,7 @@ return (
         <TouchableOpacity onPress={register} style={styles.button}>
             <Text style={styles.textbutton}>Cadastrar</Text>
         </TouchableOpacity>
+        <Link style={styles.textbutton2} href={'/moviesList'}>Ver List de Filmes</Link>
         <Link style={styles.textbutton2} href={'/login'}>Sair</Link>
 
         
