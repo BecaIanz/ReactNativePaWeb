@@ -43,10 +43,10 @@ export default function MoviesList() {
 
     async function deleteVehicle(id: string) {
     try {
-      const ref = doc(db, "vehicles", id);
+      const ref = doc(db, "movies", id);
       await deleteDoc(ref);
 
-      alert("Veículo deletado!");
+      alert("Filme deletado!");
       fetch_movies();
 
     } catch (err) {
